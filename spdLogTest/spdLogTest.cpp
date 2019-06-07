@@ -1,51 +1,38 @@
 #include <iostream>
+#include <fstream>
+#include <map>
 
 #include "spdlog/spdlog.h"
+#include "spdlog/async.h"
+
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/sinks/rotating_file_sink.h" 
-#include <fstream>
+#include "spdlog/sinks/stdout_color_sinks.h"
 
-#define DEBUGLOG
-
-
-/*
-	spdlog::info("Welcome to spdlog");
-
-	spdlog::error("Some error message with arg: {}", 1);
-
-	spdlog::warn("Easy padding in numbers like {:08d}", 12);
-	spdlog::critical("Support for int: {0:d};  hex: {0:x};  oct: {0:o}; bin: {0:b}", 42);
-	spdlog::info("Support for floats {:03.2f}", 1.23456);
-	spdlog::info("Positional args are {1} {0}..", "too", "supported");
-	spdlog::info("{:<10}", "left aligned");
-
-
-
-	// change log pattern
-	spdlog::set_pattern("[%H:%M:%S %z] [%n] [%^---%L---%$] [thread %t] %v");
-
-
-	SPDLOG_TRACE("Some trace message with param {}", {});
-	SPDLOG_DEBUG("Some debug message");
-
-	std::cout << "Hello World!\n";
-
-	*/
 
 
 class Logger {
 private:
 	
+	std::map<std::string , std::shared_ptr<spdlog::logger>> loggers;
+
+
+	inline class multiSinkLogger {
+
+	};
 
 public:
 	Logger(spdlog::level::level_enum lvl) {
+		createConsoleLogger();
 		spdlog::set_level(lvl);
 	}
 
 	Logger() {
+		createConsoleLogger();
 		spdlog::set_level(spdlog::level::off);
 	}
 
+	
 	void changeLevel(spdlog::level::level_enum lvl) {
 		spdlog::set_level(lvl);
 	}
@@ -54,53 +41,41 @@ public:
 		spdlog::set_pattern(str);
 	}
 
-	void debug(std::string str) {
-		spdlog::debug(str.c_str());
+	void deleteLogger(std::string loggerName) {
+		spdlog::drop(loggerName);
 	}
 
-	template<typename T>
-	void error(std::string str, T arg) {
-		spdlog::error(str, arg);
+	void deleteAllLoggers() {
+		spdlog::drop_all();
 	}
 
-	template<typename T>
-	void warn(std::string str, T arg) {
-		spdlog::warn(str , arg);
+	void createConsoleLogger() {
+		auto console = spdlog::stdout_color_mt("console");
+		loggers.insert(std::pair<std::string, std::shared_ptr<spdlog::logger>>("console", console));
+		console->info("ConsoleLogger init");
 	}
 
-	template<typename T>
-	void critical(std::string str, T arg) {
-		spdlog::critical(str.c_str(), arg);
-	}
-
-	void info(std::string str) {
-		spdlog::info(str);
-	}
-
-	void createFile(std::string filePath, std::string fileName) {
-		std::ofstream file(filePath + fileName);
-		file.close();
-	}
-	
 	void createFileLogger(std::string loggerName) {
-		createFile("logs/" , "basic.txt");
-		try {
-			auto my_logger = spdlog::basic_logger_mt(loggerName, "logs/basic.txt");
+		try 
+		{
+			auto fileLogger = spdlog::basic_logger_mt(loggerName, "logs/" + loggerName + ".txt");
+			loggers.insert(std::pair<std::string, std::shared_ptr<spdlog::logger>>(loggerName, fileLogger));
+			fileLogger->info("init");
 		}
 		catch (const spdlog::spdlog_ex& ex)
 		{
 			std::cout << "Log initialization failed: " << ex.what() << std::endl;
 		}
 	}
+	
 
-
-	void createFileLoggerRotated(std::string loggerName) {
-		createFile("logs/", "rotating.txt");
-
+	//maxSize in mb
+	void createFileLoggerRotated(std::string loggerName, int maxSize  , int files) {
 		try
 		{
 			//3 files 5 mb max size
-			auto file_logger = spdlog::rotating_logger_mt("file_logger", "log/rotating", 1024 * 1024 * 5, 3);
+			auto fileLoggerR = spdlog::rotating_logger_mt(loggerName, "logs/" + loggerName + ".txt", 1024 * 1024 * maxSize, files);
+			fileLoggerR->info("init");
 		}
 		catch (const spdlog::spdlog_ex& ex)
 		{
@@ -108,19 +83,76 @@ public:
 		}
 	}
 
+	void createAsyncLogger(std::string loggerName, unsigned queueSize, unsigned backThread) {
+		try 
+		{
+			spdlog::init_thread_pool(queueSize, backThread);
+			auto fileAsync = spdlog::basic_logger_mt<spdlog::async_factory>(loggerName, "logs/" + loggerName + ".txt");
+			fileAsync->info("Async logger init");
+			loggers.insert(std::pair<std::string, std::shared_ptr<spdlog::logger>>(loggerName, fileAsync));
+		}
+		catch (const spdlog::spdlog_ex& ex)
+		{
+			std::cout << "Log initialization failed: " << ex.what() << std::endl;
+		}
+		
+	}
+
+
+
+
+
+
+	void addLogger(std::string loggerName) {
+		try 
+		{
+			loggers.insert(std::pair<std::string, std::shared_ptr<spdlog::logger>>(loggerName, spdlog::get(loggerName)));
+		}
+		catch(const spdlog::spdlog_ex& ex)
+		{
+			std::cout << "Log initialization failed: " << ex.what() << std::endl;
+		}
+	}
+
+
+	std::shared_ptr<spdlog::logger> getLogger(std::string loggerName) {
+		try {
+			auto logger = loggers.find(loggerName);
+			if (logger != loggers.end()) {
+				return logger->second;
+			}
+			else {
+				console()->error("logger isnt exist");
+				//throw exception
+				return nullptr;
+			}
+		}
+		catch (const spdlog::spdlog_ex& ex)
+		{
+			std::cout << "Log initialization failed: " << ex.what() << std::endl;
+		}	
+	}
+
+	protected:
+	std::shared_ptr<spdlog::logger> console() {
+		auto logger = loggers.find("console");
+		return logger->second;
+	}
 };
 
 
 int main(){ 
 
 	Logger logger(spdlog::level::debug);
-
-
-	logger.info("hello");
-
-
-	logger.debug("degug test");
 	
-	logger.critical("fatal error {}", 4);
-	logger.createFileLogger("basicLogger");
+
+
+	logger.createFileLogger("fileLogger");
+	logger.createAsyncLogger("asyncLogger", 8192, 1);
+	logger.createFileLoggerRotated("fileRotated" ,5 ,3);
+
+
+
+	logger.getLogger("fileLogger")->error("error");
+
 }
