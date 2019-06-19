@@ -1,0 +1,1 @@
+[2019-06-07 11:30:58.561] [fileRotated] [info] init

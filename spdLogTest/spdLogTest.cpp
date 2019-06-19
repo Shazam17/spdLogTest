@@ -13,11 +13,26 @@
 
 class Logger {
 private:
-	
-	std::map<std::string , std::shared_ptr<spdlog::logger>> loggers;
+
+	std::map<std::string, std::shared_ptr<spdlog::logger>> loggers;
 
 
 	inline class multiSinkLogger {
+		//TO DO
+		std::vector<spdlog::sink_ptr> sinks;
+		std::shared_ptr<spdlog::logger> combined_logger;
+
+
+		void createLogger(std::string loggerName) {
+			combined_logger = std::make_shared<spdlog::logger>(loggerName, begin(sinks), end(sinks));
+		}
+
+		void addSink(spdlog::sinks::sink & sink) {
+			sinks.push_back(std::make_shared< spdlog::sinks::sink>());
+		}
+		void registerLogger() {
+			spdlog::register_logger();
+		}
 
 	};
 
@@ -32,14 +47,20 @@ public:
 		spdlog::set_level(spdlog::level::off);
 	}
 
-	
+
 	void changeLevel(spdlog::level::level_enum lvl) {
 		spdlog::set_level(lvl);
 	}
 
-	void setPattern(std::string str) {
-		spdlog::set_pattern(str);
+	void setPattern(std::string pattern) {
+		spdlog::set_pattern(pattern);
 	}
+
+	void setLoggerPattern(std::string loggerName, std::string pattern) {
+		auto logger = getLogger(loggerName);
+		logger->set_pattern(pattern);
+	}
+
 
 	void deleteLogger(std::string loggerName) {
 		spdlog::drop(loggerName);
@@ -56,7 +77,7 @@ public:
 	}
 
 	void createFileLogger(std::string loggerName) {
-		try 
+		try
 		{
 			auto fileLogger = spdlog::basic_logger_mt(loggerName, "logs/" + loggerName + ".txt");
 			loggers.insert(std::pair<std::string, std::shared_ptr<spdlog::logger>>(loggerName, fileLogger));
@@ -67,10 +88,10 @@ public:
 			std::cout << "Log initialization failed: " << ex.what() << std::endl;
 		}
 	}
-	
+
 
 	//maxSize in mb
-	void createFileLoggerRotated(std::string loggerName, int maxSize  , int files) {
+	void createFileLoggerRotated(std::string loggerName, int maxSize, int files) {
 		try
 		{
 			//3 files 5 mb max size
@@ -84,7 +105,7 @@ public:
 	}
 
 	void createAsyncLogger(std::string loggerName, unsigned queueSize, unsigned backThread) {
-		try 
+		try
 		{
 			spdlog::init_thread_pool(queueSize, backThread);
 			auto fileAsync = spdlog::basic_logger_mt<spdlog::async_factory>(loggerName, "logs/" + loggerName + ".txt");
@@ -95,20 +116,27 @@ public:
 		{
 			std::cout << "Log initialization failed: " << ex.what() << std::endl;
 		}
-		
+
 	}
 
+	void addFlushToLogger(std::string loggerName, spdlog::level::level_enum lvl) {
+		auto logger = getLogger(loggerName);
+		logger->flush_on(lvl);
+	}
 
+	//in seconds	
+	void addIntervalFlush(int s) {
+		spdlog::flush_every(std::chrono::seconds(s));
+	}
 
-
-
+	
 
 	void addLogger(std::string loggerName) {
-		try 
+		try
 		{
 			loggers.insert(std::pair<std::string, std::shared_ptr<spdlog::logger>>(loggerName, spdlog::get(loggerName)));
 		}
-		catch(const spdlog::spdlog_ex& ex)
+		catch (const spdlog::spdlog_ex& ex)
 		{
 			std::cout << "Log initialization failed: " << ex.what() << std::endl;
 		}
@@ -130,14 +158,25 @@ public:
 		catch (const spdlog::spdlog_ex& ex)
 		{
 			std::cout << "Log initialization failed: " << ex.what() << std::endl;
-		}	
+		}
 	}
 
-	protected:
+
+	void deleteLogger(std::string loggerName) {
+		loggers.erase(loggerName);
+		spdlog::drop(loggerName);
+	}
+
+	void deleteAllLoggers() {
+		spdlog::drop_all();
+	}
+
+protected:
 	std::shared_ptr<spdlog::logger> console() {
 		auto logger = loggers.find("console");
 		return logger->second;
 	}
+
 };
 
 

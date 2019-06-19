@@ -1,3 +1,4 @@
-﻿  pch.cpp
-  spdLogTest.cpp
+﻿  spdLogTest.cpp
+c:\users\johnpower\source\repos\spdlogtest\spdlogtest\spdlogtest.cpp(22): warning C4091: 'inline ': ignored on left of 'Logger::multiSinkLogger' when no variable is declared
+c:\users\johnpower\source\repos\spdlogtest\spdlogtest\spdlogtest.cpp(134): warning C4715: 'Logger::getLogger': not all control paths return a value
   spdLogTest.vcxproj -> C:\Users\JohnPower\source\repos\spdLogTest\Debug\spdLogTest.exe
