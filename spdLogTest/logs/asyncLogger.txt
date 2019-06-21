@@ -1,3 +1,5 @@
 [2019-06-07 11:29:19.454] [asyncLogger] [info] Async logger init
 [2019-06-07 11:29:59.365] [asyncLogger] [info] Async logger init
 [2019-06-07 11:30:58.561] [asyncLogger] [info] Async logger init
+[2019-06-20 11:51:40.681] [asyncLogger] [info] Async logger init
+[2019-06-20 12:46:57.716] [asyncLogger] [info] Async logger init

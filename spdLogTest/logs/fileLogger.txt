@@ -4,3 +4,7 @@
 [2019-06-07 11:29:59.367] [fileLogger] [error] error
 [2019-06-07 11:30:58.547] [fileLogger] [info] init
 [2019-06-07 11:30:58.561] [fileLogger] [error] error
+[2019-06-20 11:51:40.665] [fileLogger] [info] init
+[2019-06-20 11:51:40.681] [fileLogger] [error] error
+[2019-06-20 12:46:57.702] [fileLogger] [info] init
+[2019-06-20 12:46:57.716] [fileLogger] [error] error

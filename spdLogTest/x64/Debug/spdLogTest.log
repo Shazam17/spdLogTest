@@ -1,0 +1,4 @@
+﻿  spdLogTest.cpp
+  Unknown compiler version - please run the configure tests and report the results
+c:\users\johnpower\source\repos\spdlogtest\spdlogtest\spdlogtest.cpp(158): warning C4715: 'Logger::getLogger': not all control paths return a value
+LINK : fatal error LNK1104: cannot open file 'libboost_log-vc120-mt-gd-1_55.lib'

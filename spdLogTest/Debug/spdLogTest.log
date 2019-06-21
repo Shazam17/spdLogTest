@@ -1,4 +1,4 @@
 ﻿  spdLogTest.cpp
-c:\users\johnpower\source\repos\spdlogtest\spdlogtest\spdlogtest.cpp(22): warning C4091: 'inline ': ignored on left of 'Logger::multiSinkLogger' when no variable is declared
-c:\users\johnpower\source\repos\spdlogtest\spdlogtest\spdlogtest.cpp(134): warning C4715: 'Logger::getLogger': not all control paths return a value
+  Unknown compiler version - please run the configure tests and report the results
+c:\users\johnpower\source\repos\spdlogtest\spdlogtest\spdlogtest.cpp(256): warning C4930: 'Logger logger(void)': prototyped function not called (was a variable definition intended?)
   spdLogTest.vcxproj -> C:\Users\JohnPower\source\repos\spdLogTest\Debug\spdLogTest.exe
