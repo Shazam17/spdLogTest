@@ -23,7 +23,8 @@
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/sources/severity_logger.hpp>
 #include <boost/log/sources/record_ostream.hpp>
-	
+#include <boost/log/sources/logger.hpp>
+
 #define debugInfo  __LINE__ + ' ' + __FILE__
 
 #ifdef BOOST_LOG 
@@ -87,14 +88,34 @@ public:
 			logging::trivial::severity >= lvl
 		);
 
+		logging::add_file_log("sample.log");
+	
+		src::logger lg;
+
+		logging::record rec = lg.open_record();
+		if (rec)
+		{
+			logging::record_ostream strm(rec);
+			strm << "Hello, World!";
+			strm.flush();
+			lg.push_record(boost::move(rec));
+		}
+		BOOST_LOG(lg) << "Hello, World! 2";
+
+
+
 		logging::add_file_log
 		(
-			keywords::file_name = "sample_%N.log", 
+			keywords::file_name = "some.log", 
 			keywords::rotation_size = 10 * 1024 * 1024, 
 			keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 0, 0), 
 			keywords::format = "[%TimeStamp%]: %Message%"                                 
 		);
 
+
+		LOG_TRACE("trace");
+		LOG_INFO("info");
+		LOG_FATAL("fatal");
 	}
 	Logger() {
 
@@ -253,8 +274,8 @@ int main(){
 	
 
 
-	Logger logger();
+	Logger logger(logging::trivial::severity_level::trace);
 
-
+	LOG_TRACE("boost");
 	
 }

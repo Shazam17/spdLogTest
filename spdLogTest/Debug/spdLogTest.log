@@ -1,4 +1,3 @@
 ﻿  spdLogTest.cpp
   Unknown compiler version - please run the configure tests and report the results
-c:\users\johnpower\source\repos\spdlogtest\spdlogtest\spdlogtest.cpp(256): warning C4930: 'Logger logger(void)': prototyped function not called (was a variable definition intended?)
   spdLogTest.vcxproj -> C:\Users\JohnPower\source\repos\spdLogTest\Debug\spdLogTest.exe
