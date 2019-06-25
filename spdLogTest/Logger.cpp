@@ -120,9 +120,10 @@ void Logger::deleteAllLoggers() {
 
 	}
 
-void Logger::changeLevel(logging::trivial::severity_level lvl) {
-	logging::core::get()->set_filter(
-		logging::trivial::severity >= lvl
-	);
-}
+	void Logger::addFileLogger(std::string loggerName)
+	{
+	}
+	
+
+
 #endif

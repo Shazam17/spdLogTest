@@ -9,7 +9,8 @@
 int main() {
 
 	Logger logger();
-
+	
+	//logger.addFileLogger("someFile.log");
 
 }
 

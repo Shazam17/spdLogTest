@@ -3,16 +3,18 @@
 #include <map>
 #include <vector>
 
+#define BOOST_TYPEOF_EMULATION
 
+#include <boost/smart_ptr/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared_object.hpp>
 #include <boost/log/core.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/log/expressions.hpp>
-#include <boost/log/sinks/text_file_backend.hpp>
-#include <boost/log/utility/setup/file.hpp>
-#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/sinks/sync_frontend.hpp>
+#include <boost/log/sinks/text_ostream_backend.hpp>
 #include <boost/log/sources/severity_logger.hpp>
 #include <boost/log/sources/record_ostream.hpp>
-#include <boost/log/sources/logger.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
 
 
 #define debugInfo  __LINE__ + ' ' + __FILE__
@@ -24,11 +26,13 @@
 #define LOG_WARNING(x) BOOST_LOG_TRIVIAL(warning) << x << debugInfo
 #define LOG_ERROR(x) BOOST_LOG_TRIVIAL(error) << x << debugInfo
 #define LOG_FATAL(x) BOOST_LOG_TRIVIAL(fatal) << x << debugInfo
+
 namespace logging = boost::log;
 namespace src = boost::log::sources;
+namespace expr = boost::log::expressions;
 namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
-namespace attrs = boost::log::attributes;
+
 #endif
 
 
@@ -41,6 +45,18 @@ namespace attrs = boost::log::attributes;
 #define LOG_FATAL(x) spdlog:critical(x + debugInfo)
 #endif
 
+
+class FileLoggerBoost {
+
+	FileLoggerBoost() {
+		typedef sinks::synchronous_sink< sinks::text_ostream_backend > text_sink;
+		boost::shared_ptr< text_sink > sink = boost::make_shared< text_sink >();
+
+	
+	}
+
+};
+
 class Logger {
 private:
 #ifdef SPDLOG_H
@@ -52,8 +68,9 @@ private:
 	std::vector<boost::shared_ptr<sinks::sink>> store;
 #endif
 
-public:
+
 #ifdef SPDLOG_H
+public:
 	Logger(spdlog::level::level_enum lvl);
 	Logger();
 	void changeLevel(spdlog::level::level_enum lvl);
@@ -77,7 +94,9 @@ public:
 #endif
 
 #ifdef BOOST_LOG
+public:
 	Logger();
+	void addFileLogger(std::string loggerName);
 
 #endif
 
