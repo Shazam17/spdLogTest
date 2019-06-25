@@ -1,3 +1,5 @@
 ﻿  spdLogTest.cpp
   Unknown compiler version - please run the configure tests and report the results
+c:\users\johnpower\source\repos\spdlogtest\spdlogtest\logger.h(29): warning C4091: 'inline ': ignored on left of 'Logger::logerIn' when no variable is declared
+c:\users\johnpower\source\repos\spdlogtest\spdlogtest\spdlogtest.cpp(65): warning C4930: 'Logger logger(void)': prototyped function not called (was a variable definition intended?)
   spdLogTest.vcxproj -> C:\Users\JohnPower\source\repos\spdLogTest\Debug\spdLogTest.exe
