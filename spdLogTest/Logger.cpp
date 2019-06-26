@@ -11,12 +11,29 @@ Logger::Logger() {
 	createConsoleLogger();
 	spdlog::set_level(spdlog::level::off);
 }
-void Logger::changeLevel(spdlog::level::level_enum lvl) {
-	spdlog::set_level(lvl);
+void log(std::string str) {
+	for (auto& item : loggers){
+		
+	}
+}
+void addConsoleLog() {
+	auto console = spdlog::stdout_color_mt("console");
+	loggers.insert(std::pair<std::string, std::shared_ptr<spdlog::logger>>("console", console));
+	console->info("ConsoleLogger init");
+}
+void addFileLog(std::string loggerName) {
+	auto fileLogger = spdlog::basic_logger_mt(loggerName, "logs/" + loggerName + ".txt");
+	loggers.insert(std::pair<std::string, std::shared_ptr<spdlog::logger>>(loggerName, fileLogger));
+	fileLogger->info("init");
 }
 void Logger::setPattern(std::string pattern) {
 	spdlog::set_pattern(pattern);
 }
+
+void Logger::changeLevel(spdlog::level::level_enum lvl) {
+	spdlog::set_level(lvl);
+}
+#ifdef EXPIRIMENTAL
 void Logger::setLoggerPattern(std::string loggerName, std::string pattern) {
 	auto logger = getLogger(loggerName);
 	logger->set_pattern(pattern);
@@ -113,16 +130,38 @@ void Logger::deleteAllLoggers() {
 	deleteAllLoggers();
 }
 #endif
+#endif
 
 
 #ifdef BOOST_LOG
-	Logger::Logger() {
+Logger(logging::trivial::severity_level lvl) {
+	boost::log::core::get()->set_filter(
+		boost::log::trivial::severity >= lvl
+	);
+}
+void setPattern(std::string pattern) {
+	this->pattern = pattern;
+}
 
-	}
+void addConsoleLog() {
+	boost::log::add_console_log(
+		std::cout,
+		boost::log::keywords::format = this->pattern,
+		boost::log::keywords::auto_flush = true
+	);
+}
 
-	void Logger::addFileLogger(std::string loggerName)
-	{
-	}
+void addFileLog(int maxSize, int rotSize, std::string fileName, bool autoFlush) {
+	boost::log::add_file_log(
+		boost::log::keywords::file_name = fileName,
+		boost::log::keywords::rotation_size = rotSize * 1024 * 1024,
+		boost::log::keywords::max_size = maxSize * 1024 * 1024,
+		boost::log::keywords::time_based_rotation = logging::sinks::file::rotation_at_time_point(0, 0, 0),
+		boost::log::keywords::format = this->pattern,
+		boost::log::keywords::auto_flush = autoFlush
+	);
+
+}
 	
 
 

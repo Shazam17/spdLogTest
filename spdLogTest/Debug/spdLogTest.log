@@ -1,8 +1,6 @@
-﻿  spdLogTest.cpp
+﻿  Logger.cpp
   Unknown compiler version - please run the configure tests and report the results
-c:\users\johnpower\source\repos\spdlogtest\spdlogtest\spdlogtest.cpp(19): error C2039: 'target_file_name': is not a member of 'boost::log::v2s_mt_nt6::keywords'
-  c:\users\johnpower\source\repos\spdlogtest\vendor\include\boost\log\keywords\enable_final_rotation.hpp(29): note: see declaration of 'boost::log::v2s_mt_nt6::keywords'
-c:\users\johnpower\source\repos\spdlogtest\spdlogtest\spdlogtest.cpp(19): error C2065: 'target_file_name': undeclared identifier
-  Logger.cpp
+  spdLogTest.cpp
   Unknown compiler version - please run the configure tests and report the results
   Generating Code...
+  spdLogTest.vcxproj -> C:\Users\JohnPower\source\repos\spdLogTest\Debug\spdLogTest.exe
