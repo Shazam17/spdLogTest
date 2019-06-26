@@ -2,9 +2,9 @@
 
 
 
-struct Test {
-
-	void runTrivialTests(Logger logger) {
+struct Test
+{
+	static void runTrivialTests(Logger logger) {
 		LOG_TRACE("Trace log");
 		LOG_DEBUG("Debug log");
 		LOG_INFO("Info log");
@@ -12,17 +12,15 @@ struct Test {
 		LOG_WARNING("Warning log");
 		LOG_ERROR("Error log");
 	}
-
-
 };
 
 
 
-int main() {
+int main()
+{
 
 	
 	Logger logger(spdlog::level::debug);
-	Test test;
 
 
 
@@ -33,7 +31,7 @@ int main() {
 	logger.addFileLog(5, 3, "smp2.log", false);
 	
 
-	test.runTrivialTests(logger);
+	Test::runTrivialTests(logger);
 
 }
 

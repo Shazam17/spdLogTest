@@ -42,7 +42,8 @@ namespace keywords = boost::log::keywords;
 
 #endif
 
-class Logger {
+class Logger
+{
 private:
 	std::string pattern;
 #ifdef SPDLOG_H
