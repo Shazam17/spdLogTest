@@ -16,15 +16,15 @@
 
 
 
-
+#define debugInfo(x) << "LINE : "  <<  __LINE__ <<" MESSAGE :" << x<< '\n' << "FILENAME :" << __FILE__ 
 
 #ifdef BOOST_LOG 
-#define LOG_TRACE(x) BOOST_LOG_TRIVIAL(trace) << x 
-#define LOG_DEBUG(x) BOOST_LOG_TRIVIAL(debug) << x 
-#define LOG_INFO(x) BOOST_LOG_TRIVIAL(info) << x 
-#define LOG_WARNING(x) BOOST_LOG_TRIVIAL(warning) << x 
-#define LOG_ERROR(x) BOOST_LOG_TRIVIAL(error) << x
-#define LOG_FATAL(x) BOOST_LOG_TRIVIAL(fatal) << x 
+#define LOG_TRACE(x) BOOST_LOG_TRIVIAL(trace)  debugInfo(x)
+#define LOG_DEBUG(x) BOOST_LOG_TRIVIAL(debug) debugInfo(x)
+#define LOG_INFO(x) BOOST_LOG_TRIVIAL(info) debugInfo(x)
+#define LOG_WARNING(x) BOOST_LOG_TRIVIAL(warning) debugInfo(x)
+#define LOG_ERROR(x) BOOST_LOG_TRIVIAL(error) debugInfo(x)
+#define LOG_FATAL(x) BOOST_LOG_TRIVIAL(fatal) debugInfo(x)
 
 namespace logging = boost::log;
 namespace attrs = boost::log::attributes;
@@ -34,18 +34,6 @@ namespace expr = boost::log::expressions;
 namespace keywords = boost::log::keywords;
 
 #endif
-
-
-
-
-
-class FileLoggerBoost {
-
-	FileLoggerBoost() {
-	
-	}
-
-};
 
 class Logger {
 private:

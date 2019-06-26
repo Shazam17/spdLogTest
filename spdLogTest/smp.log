@@ -1,0 +1,12 @@
+[2019-06-26 11:11:27.535112][main][1] :  LINE : 8 MESSAGE :Trace log
+FILENAME :c:\users\johnpower\source\repos\spdlogtest\spdlogtest\spdlogtest.cpp
+[2019-06-26 11:11:27.537114][main][2] :  LINE : 9 MESSAGE :Debug log
+FILENAME :c:\users\johnpower\source\repos\spdlogtest\spdlogtest\spdlogtest.cpp
+[2019-06-26 11:11:27.538115][main][3] :  LINE : 10 MESSAGE :Info log
+FILENAME :c:\users\johnpower\source\repos\spdlogtest\spdlogtest\spdlogtest.cpp
+[2019-06-26 11:11:27.538115][main][4] :  LINE : 11 MESSAGE :Fatal log
+FILENAME :c:\users\johnpower\source\repos\spdlogtest\spdlogtest\spdlogtest.cpp
+[2019-06-26 11:11:27.539115][main][5] :  LINE : 12 MESSAGE :Warning log
+FILENAME :c:\users\johnpower\source\repos\spdlogtest\spdlogtest\spdlogtest.cpp
+[2019-06-26 11:11:27.539115][main][6] :  LINE : 13 MESSAGE :Error log
+FILENAME :c:\users\johnpower\source\repos\spdlogtest\spdlogtest\spdlogtest.cpp

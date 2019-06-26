@@ -134,16 +134,20 @@ void Logger::deleteAllLoggers() {
 
 
 #ifdef BOOST_LOG
-Logger(logging::trivial::severity_level lvl) {
-	boost::log::core::get()->set_filter(
+Logger::Logger(logging::trivial::severity_level lvl) {
+	logging::core::get()->set_filter(
 		boost::log::trivial::severity >= lvl
 	);
+
+	logging::core::get()->add_global_attribute("LineID", attrs::counter< unsigned int >(1));
+	logging::core::get()->add_global_attribute("TimeStamp", attrs::local_clock());
+	logging::core::get()->add_global_attribute("Scope", attrs::named_scope());
 }
-void setPattern(std::string pattern) {
+void Logger::setPattern(std::string pattern) {
 	this->pattern = pattern;
 }
 
-void addConsoleLog() {
+void Logger::addConsoleLog() {
 	boost::log::add_console_log(
 		std::cout,
 		boost::log::keywords::format = this->pattern,
@@ -151,7 +155,7 @@ void addConsoleLog() {
 	);
 }
 
-void addFileLog(int maxSize, int rotSize, std::string fileName, bool autoFlush) {
+void Logger::addFileLog(int maxSize, int rotSize, std::string fileName, bool autoFlush) {
 	boost::log::add_file_log(
 		boost::log::keywords::file_name = fileName,
 		boost::log::keywords::rotation_size = rotSize * 1024 * 1024,
