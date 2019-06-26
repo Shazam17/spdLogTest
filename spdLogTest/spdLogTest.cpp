@@ -4,7 +4,7 @@
 
 struct Test {
 
-	void runTrivialTests() {
+	void runTrivialTests(Logger logger) {
 		LOG_TRACE("Trace log");
 		LOG_DEBUG("Debug log");
 		LOG_INFO("Info log");
@@ -20,20 +20,20 @@ struct Test {
 
 int main() {
 
-	BOOST_LOG_NAMED_SCOPE("main");
-	Logger logger(logging::trivial::severity_level::trace);
+	
+	Logger logger(spdlog::level::debug);
 	Test test;
 
 
 
-	logger.setPattern("[%TimeStamp%][%Scope%][%LineID%] :  %Message%");
+	logger.setPattern("[%D] %v");
 
-	logger.addConsoleLog();
 
-	logger.addFileLog(5, 3, "smp.log", false);
+
+	logger.addFileLog(5, 3, "smp2.log", false);
 	
 
-	test.runTrivialTests();
+	test.runTrivialTests(logger);
 
 }
 

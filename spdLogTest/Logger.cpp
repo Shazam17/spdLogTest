@@ -3,25 +3,61 @@
 
 #ifdef SPDLOG_H
 Logger::Logger(spdlog::level::level_enum lvl) {
-	createConsoleLogger();
+	addConsoleLog();
 	spdlog::set_level(lvl);
 }
 
 Logger::Logger() {
-	createConsoleLogger();
+	Logger::addConsoleLog();
 	spdlog::set_level(spdlog::level::off);
 }
-void log(std::string str) {
-	for (auto& item : loggers){
-		
+
+void Logger::logTrace(std::string str) {
+	for (auto& logger : loggers){
+		logger.second->trace(str);
 	}
 }
-void addConsoleLog() {
+
+void Logger::logDebug(std::string str) {
+	for (auto& logger : loggers) {
+		logger.second->debug(str);
+	}
+}
+
+void Logger::logInfo(std::string str) {
+	for (auto& logger : loggers) {
+		logger.second->info(str);
+	}
+}
+
+void Logger::logWarn(std::string str) {
+	for (auto& logger : loggers) {
+		logger.second->warn(str);
+	}
+}
+
+void Logger::logError(std::string str) {
+	for (auto& logger : loggers) {
+		logger.second->error(str);
+	}
+}
+
+void Logger::logFatal(std::string str) {
+	for (auto& logger : loggers) {
+		logger.second->critical(str);
+	}
+}
+
+void Logger::deleteConsoleLogger() {
+	deleteLogger("console");
+}
+
+void Logger::addConsoleLog() {
 	auto console = spdlog::stdout_color_mt("console");
 	loggers.insert(std::pair<std::string, std::shared_ptr<spdlog::logger>>("console", console));
 	console->info("ConsoleLogger init");
 }
-void addFileLog(std::string loggerName) {
+void Logger::addFileLog(int maxSize, int rotSize, std::string loggerName, bool autoFlush) {
 	auto fileLogger = spdlog::basic_logger_mt(loggerName, "logs/" + loggerName + ".txt");
 	loggers.insert(std::pair<std::string, std::shared_ptr<spdlog::logger>>(loggerName, fileLogger));
 	fileLogger->info("init");
@@ -33,6 +69,17 @@ void Logger::setPattern(std::string pattern) {
 void Logger::changeLevel(spdlog::level::level_enum lvl) {
 	spdlog::set_level(lvl);
 }
+void Logger::deleteLogger(std::string loggerName) {
+	loggers.erase(loggerName);
+	spdlog::drop(loggerName);
+}
+
+void Logger::deleteAllLoggers() {
+	spdlog::drop_all();
+}
+Logger::~Logger() {
+	deleteAllLoggers();
+}
 #ifdef EXPIRIMENTAL
 void Logger::setLoggerPattern(std::string loggerName, std::string pattern) {
 	auto logger = getLogger(loggerName);
@@ -43,6 +90,10 @@ void Logger::createConsoleLogger() {
 	loggers.insert(std::pair<std::string, std::shared_ptr<spdlog::logger>>("console", console));
 	console->info("ConsoleLogger init");
 }
+void Logger::addIntervalFlush(int sec) {
+	spdlog::flush_every(std::chrono::seconds(sec));
+}
+
 void Logger::createFileLogger(std::string loggerName) {
 	try
 	{
@@ -115,20 +166,11 @@ std::shared_ptr<spdlog::logger> Logger::getLogger(std::string loggerName) {
 		std::cout << "Log initialization failed: " << ex.what() << std::endl;
 	}
 }
-void Logger::deleteLogger(std::string loggerName) {
-	loggers.erase(loggerName);
-	spdlog::drop(loggerName);
-}
 std::shared_ptr<spdlog::logger> Logger::console() {
 	auto logger = loggers.find("console");
 	return logger->second;
 }
-void Logger::deleteAllLoggers() {
-	spdlog::drop_all();
-}
-~Logger::Logger() {
-	deleteAllLoggers();
-}
+
 #endif
 #endif
 

@@ -1,0 +1,6 @@
+[06/26/19] init
+[06/26/19] Debug log
+[06/26/19] Info log
+[06/26/19] Fatal log
+[06/26/19] Warning log
+[06/26/19] Error log
